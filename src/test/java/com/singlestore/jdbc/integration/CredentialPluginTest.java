@@ -27,32 +27,17 @@ public class CredentialPluginTest extends Common {
    */
   @BeforeAll
   public static void beforeTest() throws SQLException {
-    Assumptions.assumeTrue(isMariaDBServer());
+    //    Assumptions.assumeTrue(isMariaDBServer());
     drop();
-    boolean useOldNotation = true;
-    if ((isMariaDBServer() && minVersion(10, 2, 0))
-        || (!isMariaDBServer() && minVersion(8, 0, 0))) {
-      useOldNotation = false;
-    }
     Statement stmt = sharedConn.createStatement();
-    if (useOldNotation) {
-      stmt.execute("CREATE USER 'identityUser'@'localhost'");
-      stmt.execute(
-          "GRANT SELECT ON "
-              + sharedConn.getCatalog()
-              + ".* TO 'identityUser'@'localhost' IDENTIFIED BY '!Passw0rd3Works'");
-      stmt.execute("CREATE USER 'identityUser'@'%'");
-      stmt.execute(
-          "GRANT SELECT ON "
-              + sharedConn.getCatalog()
-              + ".* TO 'identityUser'@'%' IDENTIFIED BY '!Passw0rd3Works'");
-    } else {
-      stmt.execute("CREATE USER 'identityUser'@'localhost' IDENTIFIED BY '!Passw0rd3Works'");
-      stmt.execute(
-          "GRANT SELECT ON " + sharedConn.getCatalog() + ".* TO 'identityUser'@'localhost'");
-      stmt.execute("CREATE USER 'identityUser'@'%' IDENTIFIED BY '!Passw0rd3Works'");
-      stmt.execute("GRANT SELECT ON " + sharedConn.getCatalog() + ".* TO 'identityUser'@'%'");
-    }
+    stmt.execute(
+        "GRANT SELECT ON "
+            + sharedConn.getCatalog()
+            + ".* TO 'identityUser'@'localhost' IDENTIFIED BY '!Passw0rd3Works'");
+    stmt.execute(
+        "GRANT SELECT ON "
+            + sharedConn.getCatalog()
+            + ".* TO 'identityUser'@'%' IDENTIFIED BY '!Passw0rd3Works'");
     stmt.execute("FLUSH PRIVILEGES");
   }
 
@@ -123,6 +108,7 @@ public class CredentialPluginTest extends Common {
 
   @Test
   @SuppressWarnings("unchecked")
+  // this test works on java 8 and fails on java 16 because of setEnv()
   public void envsIdentityTest() throws Exception {
     Assumptions.assumeTrue(
         !"maxscale".equals(System.getenv("srv"))
@@ -191,7 +177,7 @@ public class CredentialPluginTest extends Common {
         !"maxscale".equals(System.getenv("srv"))
             && !"skysql".equals(System.getenv("srv"))
             && !"skysql-ha".equals(System.getenv("srv")));
-    Assumptions.assumeTrue(isMariaDBServer() && haveSsl());
+    Assumptions.assumeTrue(haveSsl());
     Map<String, String> tmpEnv = new HashMap<>();
     tmpEnv.put("SINGLESTORE2_USER", "identityUser");
     tmpEnv.put("SINGLESTORE2_PWD", "!Passw0rd3Works");

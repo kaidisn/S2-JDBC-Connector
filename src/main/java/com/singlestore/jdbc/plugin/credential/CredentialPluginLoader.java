@@ -29,6 +29,7 @@ public final class CredentialPluginLoader {
     if (type == null) return null;
 
     for (CredentialPlugin implClass : loader) {
+      System.out.println(implClass.type());
       if (type.equals(implClass.type())) {
         return implClass;
       }

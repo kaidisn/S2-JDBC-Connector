@@ -38,7 +38,7 @@ public class LoggingTest extends Common {
 
   @Test
   void basicLogging() throws Exception {
-    Assumptions.assumeTrue(isMariaDBServer());
+    Assumptions.assumeTrue(false);
     File tempFile = File.createTempFile("log", ".tmp");
 
     Logger logger = (Logger) LoggerFactory.getLogger("com.singlestore.jdbc");

@@ -140,7 +140,7 @@ public class Common {
 
     rs = stmt.executeQuery("select @@have_ssl");
     assertTrue(rs.next());
-    return "YES".equals(rs.getString(1));
+    return "1".equals(rs.getString(1));
   }
 
   public static Connection createCon(String option) throws SQLException {
