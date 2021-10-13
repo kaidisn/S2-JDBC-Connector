@@ -25,12 +25,10 @@ public class Sha256AuthenticationTest extends Common {
       stmt.execute("DROP USER IF EXISTS 'cachingSha256User3'@'%'");
       stmt.execute("DROP USER IF EXISTS 'cachingSha256User4'@'%'");
     }
-    // reason is that after nativePassword test, it sometime always return wrong authentication id
-    // not cached
-    // !? strange, but mysql server error.
-    if (haveSsl() && !isMariaDBServer() && minVersion(8, 0, 0)) {
+
+    if (haveSsl()) {
       try (Connection con = createCon("sslMode=trust")) {
-        con.createStatement().execute("DO 1");
+        con.createStatement().execute("SELECT 1");
       }
     }
   }
